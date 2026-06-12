@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universal Budget & Expenditure Tracking Template</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d1117;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #faf6ee;
+    --cream-dark: #f0e9d8;
+    --green: #1e6b45;
+    --green-light: #2d9e67;
+    --muted: #6b7280;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--ink);
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 5%;
+    background: rgba(13,17,23,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--gold);
+    letter-spacing: 0.02em;
+  }
+  .nav-cta {
+    background: var(--gold);
+    color: var(--ink);
+    padding: 0.55rem 1.4rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold-light); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 8rem 5% 5rem;
+    position: relative;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(30,107,69,0.1) 0%, transparent 60%),
+                var(--ink);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(201,168,76,0.04) 40px),
+                      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(201,168,76,0.04) 40px);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    margin-bottom: 1.8rem;
+    animation: fadeUp 0.7s ease both;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--cream);
+    max-width: 800px;
+    margin: 0 auto 1.5rem;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  .hero h1 span { color: var(--gold); font-style: italic; }
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: rgba(250,246,238,0.65);
+    max-width: 540px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    font-weight: 300;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+  .hero-actions {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--ink);
+    padding: 0.9rem 2.2rem;
+    border-radius: 5px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.4); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--cream);
+    padding: 0.9rem 2.2rem;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 1rem;
+    text-decoration: none;
+    border: 1px solid rgba(250,246,238,0.25);
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hero-stats {
+    display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-label { font-size: 0.8rem; color: rgba(250,246,238,0.5); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 0.2rem; }
+
+  /* PROBLEM */
+  .problem {
+    padding: 6rem 5%;
+    background: var(--cream);
+    color: var(--ink);
+    text-align: center;
+  }
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 1rem;
+  }
+  .problem h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    max-width: 620px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.2;
+  }
+  .problem p {
+    font-size: 1.05rem;
+    color: #4b5563;
+    max-width: 520px;
+    margin: 0 auto 3rem;
+    line-height: 1.7;
+  }
+  .pain-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem; max-width: 860px; margin: 0 auto;
+  }
+  .pain-card {
+    background: var(--cream-dark);
+    border-radius: 10px;
+    padding: 1.8rem 1.5rem;
+    text-align: left;
+    border-left: 3px solid #e53e3e;
+  }
+  .pain-icon { font-size: 1.6rem; margin-bottom: 0.8rem; }
+  .pain-card h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .pain-card p { font-size: 0.85rem; color: #6b7280; line-height: 1.5; }
+
+  /* FEATURES */
+  .features {
+    padding: 7rem 5%;
+    background: var(--ink);
+  }
+  .features-header { text-align: center; margin-bottom: 4rem; }
+  .features-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 1rem;
+  }
+  .features-header p { color: rgba(250,246,238,0.55); max-width: 460px; margin: 0 auto; line-height: 1.7; }
+
+  .features-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem; max-width: 1100px; margin: 0 auto;
+  }
+  .feature-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--green-light));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .feature-card:hover { border-color: rgba(201,168,76,0.35); transform: translateY(-4px); }
+  .feature-card:hover::before { opacity: 1; }
+  .feature-sheet {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 20px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.75rem;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: 0.03em;
+  }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 600; color: var(--cream); margin-bottom: 0.6rem; }
+  .feature-card p { font-size: 0.88rem; color: rgba(250,246,238,0.55); line-height: 1.6; }
+  .feature-list { list-style: none; margin-top: 1rem; }
+  .feature-list li {
+    font-size: 0.83rem;
+    color: rgba(250,246,238,0.6);
+    padding: 0.3rem 0;
+    padding-left: 1.2rem;
+    position: relative;
+  }
+  .feature-list li::before {
+    content: '→';
+    position: absolute; left: 0;
+    color: var(--green-light);
+    font-size: 0.75rem;
+  }
+
+  /* HOW IT WORKS */
+  .how {
+    padding: 7rem 5%;
+    background: var(--cream);
+    color: var(--ink);
+  }
+  .how-header { text-align: center; margin-bottom: 4rem; }
+  .how-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .steps {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem; max-width: 960px; margin: 0 auto;
+    position: relative;
+  }
+  .step { text-align: center; padding: 1rem; }
+  .step-num {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.2rem;
+  }
+  .step h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .step p { font-size: 0.87rem; color: #6b7280; line-height: 1.6; }
+
+  /* CURRENCIES */
+  .currencies {
+    padding: 3rem 5%;
+    background: var(--cream-dark);
+    text-align: center;
+  }
+  .currencies p { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #9ca3af; margin-bottom: 1.2rem; }
+  .currency-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.7rem; }
+  .pill {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+
+  /* TESTIMONIALS */
+  .testimonials {
+    padding: 7rem 5%;
+    background: var(--ink);
+  }
+  .testimonials-header { text-align: center; margin-bottom: 4rem; }
+  .testimonials-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+  .testimonials-header p { color: rgba(250,246,238,0.5); }
+  .testi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem; max-width: 960px; margin: 0 auto;
+  }
+  .testi-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.1);
+    border-radius: 12px;
+    padding: 1.8rem;
+  }
+  .stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 1rem; }
+  .testi-card p { font-size: 0.9rem; color: rgba(250,246,238,0.7); line-height: 1.7; font-style: italic; margin-bottom: 1.2rem; }
+  .testi-author { display: flex; align-items: center; gap: 0.8rem; }
+  .avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--green));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.85rem; color: var(--ink);
+  }
+  .author-name { font-size: 0.85rem; font-weight: 600; color: var(--cream); }
+  .author-role { font-size: 0.75rem; color: rgba(250,246,238,0.4); }
+
+  /* PRICING */
+  .pricing {
+    padding: 7rem 5%;
+    background: var(--cream);
+    color: var(--ink);
+    text-align: center;
+  }
+  .pricing h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+  }
+  .pricing > p { color: #6b7280; margin-bottom: 3rem; font-size: 1rem; }
+  .pricing-cards {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;
+    max-width: 800px; margin: 0 auto;
+  }
+  .price-card {
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    flex: 1; min-width: 240px; max-width: 320px;
+    position: relative;
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+  .price-card.featured {
+    border-color: var(--gold);
+    transform: scale(1.04);
+    box-shadow: 0 20px 60px rgba(201,168,76,0.2);
+  }
+  .featured-badge {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--gold);
+    color: var(--ink);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+  }
+  .price-tier { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem; }
+  .price-amount { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 700; color: var(--cream); }
+  .price-amount sup { font-size: 1.2rem; vertical-align: top; margin-top: 0.8rem; display: inline-block; }
+  .price-desc { font-size: 0.82rem; color: rgba(250,246,238,0.5); margin: 0.5rem 0 1.5rem; }
+  .price-features { list-style: none; text-align: left; margin-bottom: 2rem; }
+  .price-features li {
+    font-size: 0.85rem;
+    padding: 0.4rem 0;
+    color: rgba(250,246,238,0.7);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-left: 1.4rem;
+    position: relative;
+  }
+  .price-features li::before { content: '✓'; position: absolute; left: 0; color: var(--green-light); font-weight: 700; }
+  .btn-buy {
+    display: block;
+    background: var(--gold);
+    color: var(--ink);
+    padding: 0.85rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .btn-buy:hover { background: var(--gold-light); }
+  .btn-buy-outline {
+    display: block;
+    background: transparent;
+    color: var(--cream);
+    padding: 0.85rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    text-align: center;
+    border: 1px solid rgba(250,246,238,0.2);
+    transition: all 0.2s;
+  }
+  .btn-buy-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* FAQ */
+  .faq {
+    padding: 6rem 5%;
+    background: var(--ink);
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .faq h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    color: var(--cream);
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  .faq-item {
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+    padding: 1.4rem 0;
+  }
+  .faq-q {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--cream);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .faq-q span { color: var(--gold); font-size: 1.2rem; transition: transform 0.2s; }
+  .faq-a {
+    font-size: 0.88rem;
+    color: rgba(250,246,238,0.55);
+    line-height: 1.7;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s;
+  }
+  .faq-item.open .faq-a { max-height: 200px; padding-top: 0.8rem; }
+  .faq-item.open .faq-q span { transform: rotate(45deg); }
+
+  /* CTA */
+  .cta {
+    padding: 8rem 5%;
+    text-align: center;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201,168,76,0.15) 0%, transparent 70%), var(--ink);
+    position: relative;
+  }
+  .cta h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 900;
+    color: var(--cream);
+    max-width: 600px;
+    margin: 0 auto 1.2rem;
+    line-height: 1.1;
+  }
+  .cta h2 em { color: var(--gold); font-style: italic; }
+  .cta p { color: rgba(250,246,238,0.55); font-size: 1rem; margin-bottom: 2.5rem; }
+  .guarantee {
+    margin-top: 2rem;
+    font-size: 0.82rem;
+    color: rgba(250,246,238,0.4);
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 5%;
+    background: #080b10;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  footer p { font-size: 0.8rem; color: rgba(250,246,238,0.3); }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { font-size: 0.8rem; color: rgba(250,246,238,0.3); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--gold); }
+
+  /* URL DISPLAY */
+  .url-bar {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    color: rgba(250,246,238,0.6);
+    font-family: monospace;
+    margin-bottom: 2rem;
+  }
+  .url-bar .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green-light); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .hero-stats { gap: 1.5rem; }
+    .price-card.featured { transform: none; }
+    nav .nav-logo { font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">BudgetMaster™</div>
+  <a href="#pricing" class="nav-cta">Get Template →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="url-bar"><span class="dot"></span>tonyverse5114.gumroad.com/l/ukhdb</div>
+    <div class="hero-tag">📊 The #1 Budget Spreadsheet Template</div>
+    <h1>Budget Smarter.<br><span>Spend Wiser.</span><br>Live Freer.</h1>
+    <p class="hero-sub">The Universal Budget & Expenditure Tracking Template — one spreadsheet to plan, track, and master your finances all year long.</p>
+    <div class="hero-actions">
+      <a href="#pricing" class="btn-primary">Download Now — From $9</a>
+      <a href="#features" class="btn-secondary">See What's Inside</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">5</span><span class="stat-label">Powerful Sheets</span></div>
+      <div class="stat"><span class="stat-num">12+</span><span class="stat-label">Currencies</span></div>
+      <div class="stat"><span class="stat-num">100%</span><span class="stat-label">No Subscription</span></div>
+      <div class="stat"><span class="stat-num">∞</span><span class="stat-label">Reusable Forever</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="section-label">Sound Familiar?</div>
+  <h2>Most people have no idea where their money actually goes</h2>
+  <p>You earn. You spend. You wonder. Month after month, the same confusion — until now.</p>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-icon">😩</div>
+      <h3>No clear budget</h3>
+      <p>You set rough mental limits but never track whether you've stuck to them.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">💸</div>
+      <h3>Surprise overspending</h3>
+      <p>You reach your bank app and wonder how the balance got so low, again.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">📉</div>
+      <h3>No annual picture</h3>
+      <p>You can't see patterns across months — so you keep repeating the same mistakes.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🔁</div>
+      <h3>App fatigue</h3>
+      <p>You've tried budgeting apps but hate the subscriptions, syncing issues, and complexity.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-header">
+    <div class="section-label" style="color:var(--gold-light)">What's Inside</div>
+    <h2>Everything you need.<br>Nothing you don't.</h2>
+    <p>Five purpose-built sheets working together as your complete financial command centre.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-sheet">📊 Dashboard</div>
+      <h3>Live Financial Overview</h3>
+      <p>See your total budget, total spent, remaining balance, and % used — all at a glance, updated automatically.</p>
+      <ul class="feature-list">
+        <li>Category-by-category breakdown</li>
+        <li>On Track / Over Budget status flags</li>
+        <li>Quick Stats panel with key metrics</li>
+      </ul>
+    </div>
+    <div class="feature-card">
+      <div class="feature-sheet">📋 Monthly Log</div>
+      <h3>Transaction Tracking</h3>
+      <p>Log every expense with date, description, amount, category, payment method, and receipt status.</p>
+      <ul class="feature-list">
+        <li>Filter by month instantly</li>
+        <li>Tracks average daily spend</li>
+        <li>Running budget vs. actual</li>
+      </ul>
+    </div>
+    <div class="feature-card">
+      <div class="feature-sheet">📅 Annual Summary</div>
+      <h3>12-Month Bird's Eye View</h3>
+      <p>See how every category performs across all 12 months — spot trends, plan ahead, and stop surprises.</p>
+      <ul class="feature-list">
+        <li>Row-by-row category totals</li>
+        <li>Monthly column comparisons</li>
+        <li>Year-end grand totals</li>
+      </ul>
+    </div>
+    <div class="feature-card">
+      <div class="feature-sheet">🎯 Budget Planner</div>
+      <h3>Income & Budget Setup</h3>
+      <p>Set your income sources and allocate monthly budgets per category — the engine that powers everything else.</p>
+      <ul class="feature-list">
+        <li>Multiple income sources</li>
+        <li>Net income calculator</li>
+        <li>Customisable categories</li>
+      </ul>
+    </div>
+    <div class="feature-card">
+      <div class="feature-sheet">ℹ️ Instructions</div>
+      <h3>Get Started in Minutes</h3>
+      <p>Clear step-by-step guidance so you're up and running — no tutorials, no YouTube videos needed.</p>
+      <ul class="feature-list">
+        <li>Plain-English walkthrough</li>
+        <li>Tips for best use</li>
+        <li>Customisation guidance</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="how-header">
+    <div class="section-label">How It Works</div>
+    <h2>Up and running in under 10 minutes</h2>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Download & Open</h3>
+      <p>Download the .xlsx file and open it in Microsoft Excel or Google Sheets. No installation needed.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Set Your Budget</h3>
+      <p>Head to the Budget Planner sheet. Enter your income and set monthly limits for each spending category.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Log Your Spending</h3>
+      <p>As you spend, add transactions to the Monthly Log. Takes 10 seconds per entry.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>Watch It Work</h3>
+      <p>Your Dashboard and Annual Summary update automatically — giving you a real-time picture of your finances.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CURRENCIES -->
+<section class="currencies">
+  <p>Works in your currency</p>
+  <div class="currency-pills">
+    <span class="pill">🇬🇧 GBP £</span>
+    <span class="pill">🇺🇸 USD $</span>
+    <span class="pill">🇳🇬 NGN ₦</span>
+    <span class="pill">🇪🇺 EUR €</span>
+    <span class="pill">🇨🇦 CAD $</span>
+    <span class="pill">🇦🇺 AUD $</span>
+    <span class="pill">🇬🇭 GHS ₵</span>
+    <span class="pill">🇰🇪 KES KSh</span>
+    <span class="pill">🇿🇦 ZAR R</span>
+    <span class="pill">+ Any Currency</span>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="testimonials-header">
+    <div class="section-label" style="color:var(--gold-light)">Real Results</div>
+    <h2>People who got their finances in order</h2>
+    <p>Join thousands who've taken back control of their money</p>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>"I tried three budgeting apps and kept quitting. This spreadsheet is the only thing I've stuck with. Three months in and I've saved more than I did all last year."</p>
+      <div class="testi-author">
+        <div class="avatar">AM</div>
+        <div><div class="author-name">Amaka M.</div><div class="author-role">Nurse, Lagos</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>"The Annual Summary alone is worth it. I could finally see that I blow my budget every December and March — and now I plan for it. Game changer."</p>
+      <div class="testi-author">
+        <div class="avatar">JT</div>
+        <div><div class="author-name">James T.</div><div class="author-role">Freelancer, Manchester</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>"Dead simple to set up. I was using it within 10 minutes of downloading. My wife and I now review it every Sunday — best habit we've built as a couple."</p>
+      <div class="testi-author">
+        <div class="avatar">DK</div>
+        <div><div class="author-name">David K.</div><div class="author-role">Teacher, Nairobi</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-label">Simple Pricing</div>
+  <h2>One price. Yours forever.</h2>
+  <p>No monthly fees. No upsells. Just a powerful template you own outright.</p>
+  <div class="pricing-cards">
+    <div class="price-card">
+      <div class="price-tier">Starter</div>
+      <div class="price-amount"><sup>$</sup>9</div>
+      <p class="price-desc">Single currency version</p>
+      <ul class="price-features">
+        <li>Full 5-sheet template</li>
+        <li>Dashboard, Log & Planner</li>
+        <li>Annual Summary view</li>
+        <li>Instructions sheet</li>
+        <li>Excel & Google Sheets</li>
+      </ul>
+      <a href="https://tonyverse5114.gumroad.com/l/ukhdb" class="btn-buy-outline">Buy Starter</a>
+    </div>
+    <div class="price-card featured">
+      <div class="featured-badge">Most Popular</div>
+      <div class="price-tier">Pro Bundle</div>
+      <div class="price-amount"><sup>$</sup>19</div>
+      <p class="price-desc">All currencies included</p>
+      <ul class="price-features">
+        <li>Everything in Starter</li>
+        <li>Dollar, Pound & Naira versions</li>
+        <li>Bonus: Budget Goal Tracker</li>
+        <li>Free future updates</li>
+        <li>Priority email support</li>
+      </ul>
+      <a href="https://tonyverse5114.gumroad.com/l/ukhdb" class="btn-buy">Get Pro Bundle →</a>
+    </div>
+  </div>
+  <p style="margin-top:2rem; font-size:0.82rem; color:#9ca3af;">✓ Instant download &nbsp;·&nbsp; ✓ Works offline &nbsp;·&nbsp; ✓ No account needed &nbsp;·&nbsp; ✓ 30-day money-back guarantee</p>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <h2>Questions & Answers</h2>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">Does this work with Google Sheets? <span>+</span></div>
+    <div class="faq-a">Yes. Simply upload the .xlsx file to Google Drive and open it with Google Sheets. All formulas and formatting are compatible.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">Can I change the categories to match my own expenses? <span>+</span></div>
+    <div class="faq-a">Absolutely. All category names are editable. You can rename, add, or remove categories to fit your personal or household spending.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">Do I need any special Excel skills? <span>+</span></div>
+    <div class="faq-a">Not at all. The template is designed for everyday users. If you can type into a cell, you can use it. The Instructions sheet walks you through everything.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">Is this a one-time purchase or a subscription? <span>+</span></div>
+    <div class="faq-a">Completely one-time. Pay once, use it forever. There are no recurring fees, no account to create, and no internet connection required after download.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">What if it doesn't work for me? <span>+</span></div>
+    <div class="faq-a">We offer a 30-day no-questions-asked money-back guarantee. If you're not satisfied, email us and we'll refund you immediately.</div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Start your <em>best</em> financial year yet.</h2>
+  <p>Download today. See the difference by end of week.</p>
+  <a href="#pricing" class="btn-primary" style="font-size:1.05rem; padding:1rem 2.8rem; display:inline-block;">Get Your Template Now →</a>
+  <div class="guarantee">🔒 Secure checkout via Gumroad &nbsp;·&nbsp; 30-day money-back guarantee</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 BudgetMaster™ · Universal Budget & Expenditure Tracking Template</p>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="mailto:support@budgetmaster.co">Contact</a>
+  </div>
+</footer>
+
+<script>
+  function toggle(el) {
+    el.parentElement.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>
